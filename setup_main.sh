@@ -13,6 +13,13 @@ fi
 
 echo "Begin Environment Setup"
 
+echo $ROOT_PASSWD | sudo -S mkdir -m 677 -p /work
+mkdir -p /work/codes
+mkdir -p /work/libraries
+mkdir -p /work/ros2_src
+mkdir -p /work/tmp
+
+
 #Get Config Parameters
 CLEAN=`cat modules.conf | grep 'clean'`
 CLEAN=${CLEAN##*=}
@@ -258,7 +265,7 @@ if [ "$OPENCV" == "1" ]; then
   fi
 
   mkdir /work/libraries/opencv/.cache/ippicv/ -p
-  mv ippicv_2017u2_lnx_intel64_20170418.tgz /work/libraries/opencv/.cache/ippicv/87cbdeb627415d8e4bc811156289fa3a-ippicv_2017u2_lnx_intel64_20170418.tgz
+  cp ippicv_2017u2_lnx_intel64_20170418.tgz /work/libraries/opencv/.cache/ippicv/87cbdeb627415d8e4bc811156289fa3a-ippicv_2017u2_lnx_intel64_20170418.tgz
 
   cd /work/libraries/opencv
   git checkout 3.3.0
@@ -267,7 +274,7 @@ if [ "$OPENCV" == "1" ]; then
 
   cd /work/libraries/opencv
   mkdir build && cd build
-  cmake -DOPENCV_EXTRA_MODULES_PATH=/home/intel/workspace/libraries/opencv_contrib/modules -DCMAKE_INSTALL_PREFIX=/usr/local -DBUILD_opencv_cnn_3dobj=OFF ..
+  cmake -DOPENCV_EXTRA_MODULES_PATH=/work/libraries/opencv_contrib/modules -DCMAKE_INSTALL_PREFIX=/usr/local -DBUILD_opencv_cnn_3dobj=OFF ..
   make -j4
   echo $ROOT_PASSWD | sudo -S make install
   echo $ROOT_PASSWD | sudo -S ldconfig
@@ -363,7 +370,7 @@ if [ "$CLCAFFE" == "1" ]; then
   cmake .. -DUSE_GREENTEA=ON -DUSE_CUDA=OFF -DUSE_INTEL_SPATIAL=ON -DBUILD_docs=0 -DUSE_ISAAC=ON -DViennaCL_INCLUDE_DIR=$HOME/local/include -DBLAS=mkl -DOPENCL_LIBRARIES=/opt/intel/opencl/libOpenCL.so -DOPENCL_INCLUDE_DIRS=/opt/intel/opencl/include
   make -j4
   export CAFFE_ROOT=$HOME/code/clCaffe
-  echo $ROOT_PASSWD | sudo -S ln -s /home/intel/code/clCaffe/ /opt/clCaffe
+  echo $ROOT_PASSWD | sudo -S ln -s /work/codes/clCaffe/ /opt/clCaffe
   export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/clCaffe/build/lib
 
   # Convert YOLO Model
