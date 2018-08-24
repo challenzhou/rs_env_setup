@@ -285,8 +285,17 @@ if [ "$NCSDK" == "1" ]; then
   echo "===================Installing NCSDK...======================="
   mkdir -p /work/libraries && cd /work/libraries
   cd /work/libraries
-  . ~/.bashrc && git clone https://github.com/movidius/ncsdk.git
-  cd ncsdk
+#  . ~/.bashrc && git clone https://github.com/movidius/ncsdk.git
+#  cd ncsdk
+  . ~/.bashrc
+  if [ -f "/work/libraries/ncsdk-1.12.00.01.tar.gz" ]; then
+    echo "=======ncsdk already existed"
+  else
+    wget https://ncs-forum-uploads.s3.amazonaws.com/ncsdk/ncsdk-01_12_00_01-full/ncsdk-1.12.00.01.tar.gz
+  fi
+
+  tar xvf ncsdk-1.12.00.01.tar.gz
+  cd ncsdk-1.12.00.01
   echo $ROOT_PASSWD | sudo -S make install
 fi
 
